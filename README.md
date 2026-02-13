@@ -1,4 +1,4 @@
-Omnichannel Retail Data Warehouse
+# Omnichannel Retail Data Warehouse
 1. Executive Summary
 
 This project implements a modern end-to-end ELT pipeline that unifies Shopify e-commerce sales and Walmart in-store transactions into a centralized Snowflake data warehouse.
@@ -7,47 +7,61 @@ The solution leverages dbt Core for transformations, enforces strict data valida
 
 The final output enables reliable cross-channel revenue analysis, operational transparency, and automated daily reporting.
 
+---
+
 2. Business Problem
 
 A mid-sized retailer operates:
 
-An online store (Shopify)
+- An online store (Shopify)
 
-Physical stores (Walmart sales dataset)
+- Physical stores (Walmart sales dataset)
 
 Sales data exists in separate systems, creating:
 
-Manual reconciliation effort
+- Manual reconciliation effort
 
-Limited visibility across channels
+- Limited visibility across channels
 
-Inconsistent reporting
+- Inconsistent reporting
 
-Delayed business insights
+- Delayed business insights
 
 This project eliminates data silos and builds a unified, automated analytics layer.
 
+---
+
 3. Solution Architecture
-Data Flow
+   
+### Data Flow
 
 Raw Data → Snowflake Staging → dbt Transformations → Star Schema → Looker Studio Dashboard
 
-Workflow Steps
+### Workflow Steps
 
 Ingestion
+
 Raw Shopify and Walmart data loaded into Snowflake staging tables
 
 Transformation
+
 Data cleaned, standardized, and modeled using dbt
 
 Modeling
+
 Star schema constructed for analytical performance
 
 Validation
+
 Automated data quality checks using dbt tests and dbt_utils
 
 Visualization
+
 Dashboard connected to Snowflake for real-time insights
+
+___
+
+4. Technology Stack
 
 | Layer           | Tool                           |
 | --------------- | ------------------------------ |
@@ -58,6 +72,7 @@ Dashboard connected to Snowflake for real-time insights
 | Documentation   | dbt Docs                       |
 | BI Layer        | Looker Studio                  |
 
+---
 
 5. Data Modeling Approach
 
@@ -95,7 +110,9 @@ Standardized Fields in Unified Fact
 
     sales_channel
 
-This ensures consistent cross-channel aggregation.
+This structure ensures consistent cross-channel aggregation and simplified reporting logic.
+
+---
 
 6. Data Quality Framework
 
@@ -103,19 +120,19 @@ Robust validation was implemented to ensure production-grade reliability.
 
 Integrity Checks
 
-Primary key uniqueness
+- Primary key uniqueness
 
-Not-null constraints
+- Not-null constraints
 
-Referential integrity (fact → dimension relationships)
+- Referential integrity (fact → dimension relationships)
 
 Business Rule Validation
 
-sales_channel restricted to valid values (shopify, walmart)
+- sales_channel restricted to valid values (shopify, walmart)
 
-Revenue must be non-negative
+- Revenue must be non-negative
 
-Quantity must be non-negative
+- Quantity must be non-negative
 
 Reconciliation Layer
 
@@ -125,3 +142,4 @@ Walmart revenue + Shopify revenue = Unified revenue
 Walmart records + Shopify records = Unified records
 
 This guarantees complete data reconciliation across channels.
+
