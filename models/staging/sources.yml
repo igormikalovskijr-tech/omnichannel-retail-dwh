@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw
+    database: RETAIL_DWH
+    schema: RAW
+    tables:
+      - name: walmart_sales
+      - name: shopify_orders
+      - name: shopify_order_items
+      - name: shopify_products
+      - name: shopify_customers
+      - name: shopify_payments
+

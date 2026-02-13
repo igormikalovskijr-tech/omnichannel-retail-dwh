@@ -1,0 +1,176 @@
+version: 2
+
+models:
+
+  # DIMENSIONS
+
+  - name: dim_product
+    description: "Product dimension containing one record per product."
+    columns:
+      - name: product_id
+        description: "Unique identifier for each product."
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_store
+    description: "Store dimension containing one record per store."
+    columns:
+      - name: store_id
+        description: "Unique identifier for each store."
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_customer
+    description: "Customer dimension containing one record per customer."
+    columns:
+      - name: customer_id
+        description: "Unique identifier for each customer."
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_date
+    description: "Date dimension for time-based analysis."
+    columns:
+      - name: date_day
+        description: "Calendar date."
+        tests:
+          - not_null
+          - unique
+
+  # FACT TABLES
+
+  - name: fct_sales_walmart
+    description: "Fact table containing Walmart in-store transactions."
+    columns:
+      - name: transaction_id
+        tests:
+          - not_null
+          - unique
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+
+      - name: store_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_store')
+              field: store_id
+
+      - name: sale_date
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+      - name: total_revenue
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
+  - name: fct_sales_shopify
+    description: "Fact table containing Shopify online transactions."
+    columns:
+      - name: transaction_id
+        tests:
+          - not_null
+          - unique
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+
+      - name: sale_date
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+      - name: total_revenue
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
+  - name: fct_sales_unified
+    description: "Unified fact table combining Walmart and Shopify transactions."
+    columns:
+      - name: transaction_id
+        tests:
+          - not_null
+          - unique
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+
+      - name: store_id
+        tests:
+          - relationships:
+              to: ref('dim_store')
+              field: store_id
+
+      - name: sale_date
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+      - name: sales_channel
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['walmart', 'shopify']
+
+      - name: total_revenue
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
+  - name: fct_sales_daily
+    description: "Aggregated daily sales fact table grouped by date and product."
+    columns:
+      - name: sale_date
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+
+      - name: total_units
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
+      - name: total_revenue
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
