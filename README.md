@@ -111,7 +111,7 @@ Referential integrity (fact → dimension relationships)
 
 Business Rule Validation
 
-sales_channel restricted to valid values
+sales_channel restricted to valid values (shopify, walmart)
 
 Revenue must be non-negative
 
@@ -120,4 +120,8 @@ Quantity must be non-negative
 Reconciliation Layer
 
 An audit model ensures full alignment:
+
 Walmart revenue + Shopify revenue = Unified revenue
+Walmart records + Shopify records = Unified records
+
+This guarantees complete data reconciliation across channels.
