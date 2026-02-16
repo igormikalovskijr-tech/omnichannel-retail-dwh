@@ -174,3 +174,57 @@ models:
           - dbt_utils.expression_is_true:
               expression: ">= 0"
 
+  - name: fct_sales_enriched
+    description: "Enriched sales fact table combining unified sales transactions
+      with product, store, and date dimensions for BI consumption."
+
+    columns:
+
+      - name: transaction_id
+        tests:
+          - not_null
+          - unique
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_id
+
+      - name: store_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_store')
+                field: store_id
+     
+      - name: sale_date
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+
+      - name: quantity
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+
+      - name: total_revenue
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+
+      - name: sales_channel
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['shopify', 'walmart']
