@@ -28,7 +28,15 @@ all_products as (
 
 select
     product_id,
-    min(product_category) as product_category
+
+    initcap(
+        replace(
+            lower(trim(min(product_category))),
+            '_',
+            ' '
+        )
+    ) as product_category
+
 from all_products
 group by product_id
 
