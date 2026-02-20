@@ -1,0 +1,6 @@
+version: 2
+
+models:
+  - name: int_sales_unified
+    description: "Intermediate unified sales model combining Shopify and Walmart transactions."
+

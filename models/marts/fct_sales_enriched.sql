@@ -2,7 +2,7 @@
 
 with sales as (
     select *
-    from {{ ref('fct_sales_unified') }}
+    from {{ ref('int_sales_unified') }}
 ),
 
 products as (

@@ -31,7 +31,7 @@ unified as (
         count(*) as unified_records,
         sum(quantity) as unified_units,
         sum(total_revenue) as unified_revenue
-    from {{ ref('fct_sales_unified') }}
+    from {{ ref('int_sales_unified') }}
     group by 1
 
 )

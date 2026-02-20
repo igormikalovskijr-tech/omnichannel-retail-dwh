@@ -5,7 +5,7 @@ select
     product_id,
     sum(quantity) as total_units,
     sum(total_revenue) as total_revenue
-from {{ ref('fct_sales_unified') }}
+from {{ ref('int_sales_unified') }}
 group by 1,2
 
 
