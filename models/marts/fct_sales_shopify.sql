@@ -15,6 +15,7 @@ orders as (
 
     select
         order_id,
+        customer_id,            
         order_purchase_timestamp as sale_date
     from {{ ref('stg_shopify_orders') }}
 
@@ -22,12 +23,14 @@ orders as (
 
 select
     oi.order_id as transaction_id,
+    o.customer_id,                
     oi.product_id,
     null as store_id,
     oi.quantity,
     oi.revenue as total_revenue,
     o.sale_date,
     'shopify' as sales_channel
+
 from order_items oi
 join orders o
     on oi.order_id = o.order_id

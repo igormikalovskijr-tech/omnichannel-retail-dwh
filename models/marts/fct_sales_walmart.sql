@@ -1,7 +1,8 @@
 {{ config(materialized='table') }}
 
 select
-    transaction_id,
+    transaction_id,	
+    customer_id,
     product_id,
     store_id,
     quantity_sold as quantity,

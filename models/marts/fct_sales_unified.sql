@@ -2,6 +2,7 @@
 
 select
     transaction_id,
+    customer_id,
     product_id,
     store_id,
     quantity,
@@ -14,6 +15,7 @@ union all
 
 select
     transaction_id,
+    customer_id,
     product_id,
     store_id,
     quantity,
@@ -21,5 +23,4 @@ select
     sale_date,
     sales_channel
 from {{ ref('fct_sales_shopify') }}
-
 

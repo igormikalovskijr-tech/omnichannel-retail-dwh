@@ -1,43 +1,61 @@
 {{ config(materialized='table') }}
 
 with sales as (
-    select * 
+    select *
     from {{ ref('fct_sales_unified') }}
 ),
 
 products as (
-    select * 
+    select *
     from {{ ref('dim_product') }}
 ),
 
 dates as (
-    select * 
+    select *
     from {{ ref('dim_date') }}
 ),
 
 stores as (
-    select * 
+    select *
     from {{ ref('dim_store') }}
+),
+
+customers as (
+    select *
+    from {{ ref('dim_customer') }}
 )
 
 select
+    -- Keys
     s.transaction_id,
     s.product_id,
-    p.product_category,
+    s.customer_id,
     s.store_id,
+
+    -- Product
+    p.product_category,
+
+    -- Store
     st.store_location,
+
+    -- Customer
+    c.customer_city,
+    c.customer_state,
+
+    -- Metrics
     s.quantity,
     s.total_revenue,
-    s.sale_date,
 
-    -- Date enrichments
+    -- Date
+    s.sale_date,
     d.year,
     d.month,
+    d.quarter,
     d.day,
     d.day_name,
-    d.quarter,
     d.season,
 
+    -- Channel
     s.sales_channel
 
 from sales s
@@ -45,9 +63,12 @@ from sales s
 left join products p
     on s.product_id = p.product_id
 
-left join dates d
-    on s.sale_date = d.date_day
-
 left join stores st
     on s.store_id = st.store_id
+
+left join customers c
+    on s.customer_id = c.customer_id
+
+left join dates d
+    on s.sale_date = d.date_day
 
