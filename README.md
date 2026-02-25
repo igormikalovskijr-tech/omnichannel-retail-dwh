@@ -35,29 +35,34 @@ This project eliminates data silos and builds a unified, automated analytics lay
    
 ### Data Flow
 
-Raw Data → Snowflake Staging → dbt Transformations → Star Schema → Looker Studio Dashboard
+Raw Data
+→ Snowflake Staging 
+→ dbt Transformations 
+→ Intermediate Layer
+→ Star Schema (Marts)
+→ Looker Studio Dashboard
 
-### Workflow Steps
+### Architectural Layers
 
-Ingestion
+Staging Layer
 
-Raw Shopify and Walmart data loaded into Snowflake staging tables
+ - Cleans and standardizes raw Shopify and Walmart data.
 
-Transformation
+Intermediate Layer
 
-Data cleaned, standardized, and modeled using dbt
+- int_sales_unified
 
-Modeling
+- Consolidates cross-channel transactions before enrichment.
 
-Star schema constructed for analytical performance
+- Separates technical transformation logic from business-facing models.
 
-Validation
+Mart Layer (Consumption Layer)
 
-Automated data quality checks using dbt tests and dbt_utils
+- Optimized star schema for BI consumption.
 
-Visualization
+Audit Layer
 
-Dashboard connected to Snowflake for real-time insights
+- Reconciliation logic to ensure full alignment across channels.
 
 ___
 
@@ -76,39 +81,53 @@ ___
 
 5. Data Modeling Approach
 
-The warehouse follows a star schema optimized for analytical queries.
+The warehouse follows a layered architecture aligned with enterprise dbt best practices.
 
-Fact Tables
+Fact Tables (Business-Facing)
 
-    fct_sales_shopify
+- fct_sales_enriched
 
-    fct_sales_walmart
+- fct_sales_daily
 
-    fct_sales_unified
+- fct_sales_shopify
 
-    fct_sales_daily
+- fct_sales_walmart
+
+Intermediate Model
+
+- int_sales_unified
+
+  - Consolidates Shopify and Walmart transactions using UNION ALL.
+
+  - Maintains standardized fields across channels.
 
 Dimension Tables
 
-    dim_product
+- dim_product
 
-    dim_store
+- dim_store
 
-    dim_customer
+- dim_customer
 
-    dim_date
+- dim_date
 
-Standardized Fields in Unified Fact
+Standardized Fields in Unified Model
 
-    product_id
+- transaction_id
 
-    sale_date
+- customer_id
 
-    quantity
+- product_id
 
-    revenue
+- store_id
 
-    sales_channel
+- sale_date
+
+- quantity
+
+- total_revenue
+
+- sales_channel
 
 This structure ensures consistent cross-channel aggregation and simplified reporting logic.
 
@@ -142,4 +161,20 @@ Walmart revenue + Shopify revenue = Unified revenue
 Walmart records + Shopify records = Unified records
 
 This guarantees complete data reconciliation across channels.
+
+7. Architectural Design Decision
+
+The unified sales logic was intentionally moved to an intermediate layer (int_sales_unified) to separate technical consolidation logic from business-facing fact tables.
+
+This improves:
+
+- Maintainability
+
+- Scalability
+
+- Testability
+
+- Layered clarity
+
+- Alignment with enterprise dbt modeling standards
 
