@@ -18,3 +18,21 @@ models:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: ">= 1"
+
+  - name: int_product_pairs
+    description: "Intermediate model identifying product pairs purchased by the same customers."
+    columns:
+      - name: product_1
+        tests:
+          - not_null
+
+      - name: product_2
+        tests:
+          - not_null
+
+      - name: times_bought_together
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 1"
