@@ -1,6 +1,20 @@
 version: 2
 
 models:
+
   - name: int_sales_unified
     description: "Intermediate unified sales model combining Shopify and Walmart transactions."
 
+  - name: int_customer_channel_usage
+    description: "Intermediate model counting distinct channels per customer."
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+
+      - name: channels_used
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 1"

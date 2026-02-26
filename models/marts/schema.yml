@@ -175,3 +175,22 @@ models:
               arguments:
                 values: ['walmart', 'shopify']
 
+  - name: mart_customer_channel_behavior
+    description: "Aggregated view of customers by channel usage (single vs omnichannel)."
+    columns:
+
+      - name: customer_type
+        description: "Classification of customer based on number of channels used."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Single Channel', 'Omnichannel', 'Other']
+
+      - name: total_customers
+        description: "Total number of customers in each category."
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
