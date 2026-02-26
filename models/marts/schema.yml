@@ -194,3 +194,21 @@ models:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: ">= 0"
+
+  - name: mart_market_basket
+    description: "Market basket analysis by product category based on cross-customer purchasing behavior."
+    columns:
+      - name: product_1_category
+        tests:
+          - not_null
+
+      - name: product_2_category
+        tests:
+          - not_null
+
+      - name: times_bought_together
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 1"
